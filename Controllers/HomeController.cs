@@ -52,5 +52,75 @@ namespace ProAspNetCoreMvcModelBinding.Controllers
         {
             return View("Index", pessoa);
         }
+
+        public ViewResult EnderecoBasico(EnderecoResumido endereco)
+        {
+            return View("EnderecoBasico", endereco);
+        }
+
+        public ViewResult EnderecoBasico2([Bind(Prefix = nameof(Pessoa.EnderecoCasa))] EnderecoResumido endereco)
+        {
+            return View("EnderecoBasico", endereco);
+        }
+
+        public ViewResult EnderecoBasico3([Bind(nameof(EnderecoResumido.Cidade), Prefix = nameof(Pessoa.EnderecoCasa))] EnderecoResumido endereco)
+        {
+            return View("EnderecoBasico", endereco);
+        }
+
+        public ViewResult Nomes(string[] nomes)
+        {
+            return View("Nomes", nomes ?? new string[0]);
+        }
+
+        public ViewResult Nomes2(IList<string> nomes)
+        {
+            return View("Nomes2", nomes ?? new List<string>());
+        }
+
+        public ViewResult Enderecos(IList<EnderecoResumido> enderecos)
+        {
+            return View("Enderecos", enderecos ?? new List<EnderecoResumido>());
+        }
+
+        public IActionResult Index4([FromQuery] int? id)
+        {
+            Pessoa pessoa;
+            if (id.HasValue && (pessoa = repository[id.Value]) != null)
+            {
+                return View(pessoa);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        public string Header([FromHeader]string accept)
+        {
+            return $"Header: {accept}";
+        }
+
+        public string Header2([FromHeader(Name = "Accept-Language")] string accept)
+        {
+            return $"Header: {accept}";
+        }
+
+        public ViewResult Header3(HeaderModel model)
+        {
+            return View("Header", model);
+        }
+
+        [HttpGet]
+        public ViewResult Body()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult Body([FromBody]Pessoa pessoa)
+        {
+            return Json(pessoa.Nome);
+        }
     }
 }
