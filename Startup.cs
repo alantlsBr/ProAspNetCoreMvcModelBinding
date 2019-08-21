@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using ProAspNetCoreMvcModelBinding.Repository;
 
 namespace ProAspNetCoreMvcModelBinding
 {
@@ -15,6 +16,7 @@ namespace ProAspNetCoreMvcModelBinding
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IRepository, MemoryRepository>();
             services.AddMvc();
         }
 
@@ -23,14 +25,17 @@ namespace ProAspNetCoreMvcModelBinding
         {
             if (env.IsDevelopment())
             {
+                app.UseStatusCodePages();
                 app.UseDeveloperExceptionPage();
+                app.UseStaticFiles();
+                //app.UseMvcWithDefaultRoute();
             }
 
             app.UseStaticFiles();
 
             app.UseMvc(rotas =>
             {
-                rotas.MapRoute(name: "default", template: "{Controller=home}/{action=Index}");
+                rotas.MapRoute(name: "default", template: "{Controller=home}/{action=Index2}/{id?}");
             });
         }
     }
